@@ -1,0 +1,88 @@
+int abre(CLIENT * sv, int cpf)
+{
+	int * result;
+
+	result = abreconta_1(&cpf, sv);
+	if(result == NULL)
+	{
+		printf("problema na chamada RPC");
+	}
+
+	return 0;
+}
+
+int fecha()
+{
+	printf("fecha\n");
+	return 0;
+}
+
+int aut()
+{
+	printf("autentica\n");
+	return 0;
+}
+
+
+int
+main (int argc, char *argv[])
+{
+	CLIENT *sv;
+	int t;
+
+	if (argc != 2) {
+		printf ("usage: %s server_host\n", argv[0]);
+		exit (1);
+	}
+
+	sv = clnt_create (argv[1], BANCO, VERSAO, "udp");
+	if (sv == NULL) {
+		clnt_pcreateerror (argv[1]);
+		exit (1);
+	}
+
+	printf("1 - Administracao\n2 - Agencia\n3 - Caixa\n");
+	scanf("%d",&t);
+
+	while(1)
+	{
+		printf("\n\n");
+		
+		if(t == 1)
+		{
+			int cpf;
+			int op;
+
+			printf("digite o CPF do cliente\n");
+			scanf("%d",&cpf);
+
+			printf("1 - Abertura de Conta\n2 - Fechamento de Conta\n");
+			printf("3 - Autenticacao de Conta\n");
+			scanf("%d",&op);
+
+			switch(op)
+			{
+				case 1:
+					abre(sv, cpf);
+					break;
+				case 2:
+					fecha();
+					break;
+				case 3:
+					aut();
+					break;
+			}
+
+		}
+		else if(t == 2)
+		{
+			printf("oi");
+		}
+		else if(t == 3)
+		{
+			printf("xau");
+		}
+	}
+
+	exit (0);
+}
