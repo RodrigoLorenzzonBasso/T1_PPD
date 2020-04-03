@@ -105,6 +105,8 @@ void depos(long cpf, CLIENT * sv);
 void retir(long cpf, CLIENT * sv);
 void cons(long cpf, CLIENT * sv);
 
+// TODO: Fazer todas as funções
+
 int
 main (int argc, char *argv[])
 {
@@ -197,10 +199,14 @@ void abre(long cpf, CLIENT * sv)
 	params.cpf = cpf;
 	params.senha = senha;
 
-	result = abreconta_1(&params, sv);
+	/*result = abreconta_1(&params, sv);
 	if (result == (int *) NULL) {
 		clnt_perror (sv, "call failed");
-	}
+	}*/
+
+	do{
+		result = abreconta_1(&params, sv);
+	}while(result == (int *) NULL);
 
 	printf("Conta aberta com sucesso!\n");
 }

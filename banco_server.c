@@ -6,6 +6,8 @@
 
 #include "banco.h"
 
+#include <stdlib.h>
+
 struct conta{
 	long cpf;
 	int senha;
@@ -16,15 +18,22 @@ typedef struct conta conta;
 
 conta contas[50];
 
+int sim_falha()
+{
+	srand(time(NULL));
+	int num = rand() % 2;
+	return num;
+}
+
 int *
 abreconta_1_svc(info *argp, struct svc_req *rqstp)
 {
-	static int  result;
-
-	fprintf(stderr, "Requisicao de abertura de conta\n");
+	static int result;
 
 	long cpf = argp->cpf;
 	int senha = argp->senha;
+
+	fprintf(stderr, "Requisicao de abertura de conta\n");
 
 	for(int i=0;i<50;i++)
 	{
@@ -41,6 +50,13 @@ abreconta_1_svc(info *argp, struct svc_req *rqstp)
 		result = 1;
 	}
 
+	/*if(sim_falha() == 0)
+		return &result;
+	else
+	{
+		printf("Falha na comunicação\n");
+		return NULL;
+	}*/
 	return &result;
 }
 
@@ -49,10 +65,25 @@ fechaconta_1_svc(info *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	/*
-	 * insert server code here
-	 */
+	long cpf = argp->cpf;
+	int senha = argp->senha;
 
+	fprintf(stderr, "Requisicao de fechamento de conta\n");
+
+	for(int i=0;i<50;i++)
+	{
+		if(contas[i].cpf == cpf && contas[i].senha == senha)
+		{
+			contas[i].cpf = 0;
+			contas[i].senha = 0;
+			fprintf(stderr, "Conta fechada com sucesso : pos %d\n", i);
+			result = 0;
+			return &result;
+		}
+	}
+
+	printf("CPF ou senha inválidos\n");
+	result = 1;
 	return &result;
 }
 
@@ -61,10 +92,23 @@ autentica_1_svc(info *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	/*
-	 * insert server code here
-	 */
+	long cpf = argp->cpf;
+	int senha = argp->senha;
 
+	fprintf(stderr, "Requisicao de autenticação de conta\n");
+
+	for(int i=0;i<50;i++)
+	{
+		if(contas[i].cpf == cpf && contas[i].senha == senha)
+		{
+			fprintf(stderr,"Conta autenticada pos %d\n",i);
+			result = 0;
+			return &result;
+		}
+	}
+
+	fprintf(stderr,"Conta não existente\n");
+	result = 1;
 	return &result;
 }
 
@@ -73,10 +117,26 @@ deposita_1_svc(dep *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	/*
-	 * insert server code here
-	 */
+	long cpfDest = argp->cpfDest;
+	float  val = argp->val;
 
+	fprintf(stderr, "Requisicao de depósito\n");
+
+	for(int i=0;i<50;i++)
+	{
+		if(contas[i].cpf == cpfDest)
+		{
+			contas[i].val += val;
+			fprintf(stderr, "Depósito feito com sucesso\n");
+			result = 0;
+			return &result;
+		}
+	}
+
+	// TODO: Colocar mecanismo de simulação de falha
+
+	fprintf(stderr, "Conta não existente\n");
+	result = 1;
 	return &result;
 }
 
@@ -85,10 +145,27 @@ retira_1_svc(ret *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	/*
-	 * insert server code here
-	 */
+	long cpf = argp->cpf;
+	int senha = argp->senha;
+	float val = argp->val;
 
+	fprintf(stderr, "Requisicao de saque\n");
+
+	for(int i=0;i<50;i++)
+	{
+		if(contas[i].cpf == cpf && contas[i].senha == senha)
+		{
+			contas[i].val -= val;
+			fprintf(stderr, "Saque feito com sucesso\n");
+			result = 0;
+			return &result;
+		}
+	}
+
+	// TODO: Colocar mecanismo de simulação de falha
+
+	fprintf(stderr, "CPF ou senha inválidos!");
+	result = 1;
 	return &result;
 }
 
@@ -97,9 +174,7 @@ consulta_1_svc(info *argp, struct svc_req *rqstp)
 {
 	static int  result;
 
-	/*
-	 * insert server code here
-	 */
+	// TODO: Mudar o tipo de retorn pra float e etc
 
 	return &result;
 }
