@@ -3,18 +3,18 @@
 
 # Parameters
 
-CLIENT = bancoV3_client
-SERVER = bancoV3_server
+CLIENT = banco_client
+SERVER = banco_server
 
 SOURCES_CLNT.c = 
 SOURCES_CLNT.h = 
 SOURCES_SVC.c = 
 SOURCES_SVC.h = 
-SOURCES.x = bancoV3.x
+SOURCES.x = banco.x
 
-TARGETS_SVC.c = bancoV3_svc.c bancoV3_server.c bancoV3_xdr.c 
-TARGETS_CLNT.c = bancoV3_clnt.c bancoV3_client.c bancoV3_xdr.c 
-TARGETS = bancoV3.h bancoV3_xdr.c bancoV3_clnt.c bancoV3_svc.c bancoV3_client.c bancoV3_server.c
+TARGETS_SVC.c = banco_svc.c banco_server.c banco_xdr.c 
+TARGETS_CLNT.c = banco_clnt.c banco_client.c banco_xdr.c 
+TARGETS = banco.h banco_xdr.c banco_clnt.c banco_svc.c banco_client.c banco_server.c
 
 OBJECTS_CLNT = $(SOURCES_CLNT.c:%.c=%.o) $(TARGETS_CLNT.c:%.c=%.o)
 OBJECTS_SVC = $(SOURCES_SVC.c:%.c=%.o) $(TARGETS_SVC.c:%.c=%.o)
